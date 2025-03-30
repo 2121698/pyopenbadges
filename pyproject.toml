@@ -20,6 +20,7 @@ python = "^3.11"
 pydantic = "^2.0.0"
 requests = "^2.28.0"
 email-validator = "^2.0.0"  # Pour la validation des EmailStr dans Pydantic
+cryptography = "^42.0.0"  # Pour les fonctionnalités cryptographiques
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.0.0"

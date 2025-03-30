@@ -5,10 +5,14 @@ Un OpenBadgeCredential représente l'attribution d'un badge spécifique à un de
 C'est l'équivalent de l'Assertion dans OpenBadge v2.
 """
 
-from typing import Optional, List, Dict, Any, Union, Annotated
+from typing import Optional, List, Dict, Any, Union, Annotated, TYPE_CHECKING
 from pydantic import BaseModel, HttpUrl, EmailStr, Field, field_validator, model_validator
 from datetime import datetime
 from uuid import UUID
+
+# Utilisation de TYPE_CHECKING pour éviter les importations circulaires
+if TYPE_CHECKING:
+    from pyopenbadges.crypto.keys import PrivateKey, PublicKey
 
 from .profile import Profile
 from .achievement import Achievement
@@ -144,6 +148,9 @@ class OpenBadgeCredential(BaseModel):
         """
         Vérifie si le credential est valide (non expiré et non révoqué)
         
+        Cette méthode ne vérifie pas la signature cryptographique.
+        Pour vérifier la signature, utilisez la méthode verify_signature().
+        
         Returns:
             bool: True si le credential est valide, False sinon
         """
@@ -154,6 +161,50 @@ class OpenBadgeCredential(BaseModel):
             return False
         
         return True
+    
+    def sign(self, private_key: 'PrivateKey', verification_method: Union[str, HttpUrl]) -> 'OpenBadgeCredential':
+        """
+        Signe le credential avec la clé privée fournie.
+        
+        Args:
+            private_key: La clé privée pour signer le credential
+            verification_method: L'URL de la méthode de vérification (clé publique)
+        
+        Returns:
+            OpenBadgeCredential: Le credential signé
+        """
+        # Import ici pour éviter les importations circulaires
+        from pyopenbadges.crypto.signing import sign_credential as crypto_sign_credential
+        
+        return crypto_sign_credential(
+            credential=self,
+            private_key=private_key,
+            verification_method=verification_method
+        )
+    
+    def verify_signature(self, public_key: 'PublicKey') -> bool:
+        """
+        Vérifie la signature cryptographique du credential.
+        
+        Args:
+            public_key: La clé publique pour vérifier la signature
+        
+        Returns:
+            bool: True si la signature est valide, False sinon
+        
+        Raises:
+            ValueError: Si le credential n'a pas de preuve
+        """
+        if self.proof is None:
+            raise ValueError("Le credential ne possède pas de preuve")
+        
+        # Import ici pour éviter les importations circulaires
+        from pyopenbadges.crypto.verification import verify_credential as crypto_verify_credential
+        
+        return crypto_verify_credential(
+            credential=self,
+            public_key=public_key
+        )
     
     def to_json_ld(self) -> Dict[str, Any]:
         """

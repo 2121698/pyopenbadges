@@ -15,6 +15,22 @@ More info about OpenBadges: https://openbadges.info/
 - Conversion to/from JSON-LD
 - Advanced validation utilities
 - Compatibility with Verifiable Credentials
+- Cryptographic signing and verification of credentials
+- Key management utilities (Ed25519, RSA)
+
+## Verifiable Credentials
+
+Verifiable Credentials are like digital identity cards that can be verified:
+
+- They are digital documents that prove something about someone
+- They are signed by a trusted entity (the issuer)
+- They can be verified to ensure they are authentic and haven't been tampered with
+
+In PyOpenBadges, digital badges are implemented as Verifiable Credentials:
+- The badge issuer is the credential issuer
+- The badge recipient is the credential subject
+- The badge itself is represented as an Achievement
+- The credential can be cryptographically verified for authenticity
 
 ## Installation
 
@@ -72,6 +88,30 @@ print(json_ld)
 ## Documentation
 
 For more details on using this library, check out the [tutorial](TUTORIAL.md) and the [complete documentation](DOCUMENTATION.md).
+
+## Cryptographic Features
+
+PyOpenBadges supports cryptographic signing and verification of credentials:
+
+```python
+from pyopenbadges.crypto import generate_keypair
+
+# Generate a keypair
+keypair = generate_keypair()
+
+# Sign a credential
+signed_credential = credential.sign(
+    private_key=keypair.private_key,
+    verification_method="https://example.org/issuers/1/keys/1"
+)
+
+# Verify a credential
+is_valid = signed_credential.verify_signature(
+    public_key=keypair.public_key
+)
+```
+
+For a complete guide to the cryptographic features, see the [crypto tutorial](TUTORIAL.crypto.md).
 
 ## License
 

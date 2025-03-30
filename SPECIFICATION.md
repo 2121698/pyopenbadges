@@ -8,6 +8,35 @@ This document summarizes the OpenBadge v3.0 specifications according to IMS Glob
 
 OpenBadges v3.0 is a standard format for representing and verifying digital badges. Version 3.0 is based on W3C Verifiable Credentials and brings several improvements compared to v2.0.
 
+## 1.1 Verifiable Credentials
+
+Verifiable Credentials (VCs) are a W3C standard for digital credentials that can be cryptographically verified. They are a core component of OpenBadge v3.0.
+
+### Key Concepts
+
+- **Verifiable Credential**: A tamper-evident credential with authorship that can be cryptographically verified
+- **Issuer**: The entity that creates and signs the credential
+- **Subject**: The entity about which claims are made (the recipient of a badge)
+- **Verifier**: Any entity that needs to verify the credential's authenticity
+
+### Structure of a Verifiable Credential
+
+A Verifiable Credential consists of:
+
+1. **Metadata**: Information about the credential itself (ID, type, issuance date, etc.)
+2. **Claims**: Statements about the subject (in OpenBadges, this includes the achievement)
+3. **Proof**: Cryptographic proof that makes the credential verifiable
+
+### Verification Process
+
+The verification of a Verifiable Credential involves:
+
+1. Checking the credential's signature using the issuer's public key
+2. Verifying that the credential hasn't been revoked or expired
+3. Validating that the credential conforms to the expected schema
+
+In PyOpenBadges, the `OpenBadgeCredential` model implements the Verifiable Credential standard, with the `proof` field containing the cryptographic signature.
+
 ## 2. General Structure
 
 An OpenBadge v3.0 badge consists of several interconnected elements:

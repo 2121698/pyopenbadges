@@ -38,3 +38,6 @@ ENV/
 *.swp
 *.swo
 .DS_Store
+
+# Key
+.pem

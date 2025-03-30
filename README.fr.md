@@ -16,6 +16,20 @@ Plus d'info sur les OpenBadges : https://openbadges.info/
 - Utilitaires de validation avancés
 - Compatibilité avec les Verifiable Credentials
 
+## Verifiable Credentials
+
+Les Verifiable Credentials sont comme des cartes d'identité numériques qu'on peut vérifier :
+
+- Ce sont des documents numériques qui prouvent quelque chose sur quelqu'un
+- Ils sont signés par une entité de confiance (l'émetteur)
+- Ils peuvent être vérifiés pour s'assurer qu'ils sont authentiques et n'ont pas été falsifiés
+
+Dans PyOpenBadges, les badges numériques sont implémentés comme des Verifiable Credentials :
+- L'émetteur du badge est l'émetteur du credential
+- Le destinataire du badge est le sujet du credential
+- Le badge lui-même est représenté comme un Achievement
+- Le credential peut être vérifié cryptographiquement pour son authenticité
+
 ## Installation
 
 ```bash

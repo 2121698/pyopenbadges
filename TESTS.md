@@ -136,6 +136,40 @@ This test verifies that the `is_valid()` method works correctly.
 ### Test 7: Validating an endorsement
 This test verifies that the validation function correctly detects valid and invalid endorsements.
 
+## Tests for Cryptographic Features
+
+Cryptographic features help make sure badges are secure and can be trusted.
+
+### Test 1: Generating cryptographic keys
+This test verifies that the library can create secure keys for signing badges.
+
+### Test 2: Saving and loading keys
+This test verifies that keys can be saved to files and loaded back correctly.
+
+### Test 3: Creating a cryptographic proof
+This test verifies that a digital proof can be created to make a badge secure.
+
+### Test 4: Signing a credential
+This test verifies that a credential can be signed with a private key.
+
+### Test 5: Verifying a signature
+This test verifies that a signature can be checked with a public key.
+
+### Test 6: Detecting tampered credentials
+This test verifies that the library can detect when someone changes a signed credential.
+
+### Test 7: Credential signing integration
+This test verifies that the credential model can directly sign itself.
+
+### Test 8: Credential verification integration
+This test verifies that the credential model can verify its own signature.
+
+### Test 9: Complete cryptographic workflow
+This test verifies the entire process from key generation to signature verification works together.
+
+### Test 10: JSON serialization of signed credentials
+This test verifies that signed credentials can be saved as JSON correctly.
+
 ## Summary
 
-In total, there are 25 tests that verify all parts of the PyOpenBadges library work correctly. These tests help us ensure that the library does what it's supposed to do.
+In total, there are 48 tests that verify all parts of the PyOpenBadges library work correctly. These tests help us ensure that the library does what it's supposed to do.
