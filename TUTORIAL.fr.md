@@ -34,7 +34,7 @@ Dans OpenBadge v3, les émetteurs sont représentés par le modèle `Profile`. C
 
 ```python
 from pyopenbadges.models import Profile
-from pyopenbadges.models.profile import Image, Address
+from pyopenbadges.models.profile import Image
 
 # Création d'un profil émetteur minimal
 issuer_minimal = Profile(

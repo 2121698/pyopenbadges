@@ -34,7 +34,7 @@ In OpenBadge v3, issuers are represented by the `Profile` model. Let's start by 
 
 ```python
 from pyopenbadges.models import Profile
-from pyopenbadges.models.profile import Image, Address
+from pyopenbadges.models.profile import Image
 
 # Creating a minimal issuer profile
 issuer_minimal = Profile(
@@ -56,13 +56,6 @@ issuer_complete = Profile(
         id="https://example.org/issuers/1/image",
         type="Image",
         caption="My Organization Logo"
-    ),
-    address=Address(
-        streetAddress="123 Example Street",
-        addressLocality="Lyon",
-        addressRegion="Auvergne-Rhône-Alpes",
-        postalCode="69000",
-        addressCountry="FR"
     )
 )
 
@@ -76,24 +69,31 @@ print(issuer_json)
 Once the issuer is created, you can define badges (Achievement):
 
 ```python
-from pyopenbadges.models import Achievement
+from pyopenbadges.models import Achievement, Profile
 from pyopenbadges.models.achievement import Criteria, Alignment
+
+# Create an issuer first (required)
+issuer = Profile(
+    id="https://example.org/issuers/1",
+    type="Profile",
+    name="My Organization"
+)
 
 # Creating a minimal badge
 badge_minimal = Achievement(
     id="https://example.org/badges/1",
     type="Achievement",
     name="Python Beginner Badge",
-    issuer="https://example.org/issuers/1"  # Reference to the issuer by its ID
+    issuer=issuer  # Using the issuer object
 )
 
 # Creating a complete badge
 badge_complete = Achievement(
-    id="https://example.org/badges/1",
+    id="https://example.org/badges/2",
     type="Achievement",
     name="Python Beginner Badge",
     description="This badge certifies mastery of Python basics",
-    issuer=issuer_complete,  # Using the issuer object directly
+    issuer=issuer,  # Using the issuer object created above
     criteria=Criteria(
         narrative="To earn this badge, the candidate must demonstrate understanding of fundamental Python concepts, including variables, control structures, functions, and basic modules."
     ),
