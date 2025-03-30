@@ -41,6 +41,96 @@ PyOpenBadges prend actuellement en charge le type de schéma suivant:
 
 - `JsonSchemaValidator2019`: Pour la validation via JSON Schema
 
+## Contextes JSON-LD et vocabulaires
+
+Les contextes JSON-LD sont une partie essentielle de la spécification OpenBadge v3.0 et sont utilisés pour définir les termes et les relations dans un document JSON-LD. Lors de l'utilisation de `credentialSchema`, il est important de comprendre comment ces contextes fonctionnent avec la validation de schéma.
+
+### Contextes utilisés dans PyOpenBadges
+
+La méthode `to_json_ld()` inclut automatiquement ces contextes essentiels:
+
+```json
+"@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://w3id.org/openbadges/v3"
+]
+```
+
+#### Détails des contextes
+
+1. **`https://www.w3.org/2018/credentials/v1`**
+   - Définit le vocabulaire principal des Verifiable Credentials
+   - Inclut les termes comme `VerifiableCredential`, `credentialSubject`, `issuer`, `issuanceDate`
+   - Établit les modèles de données pour la vérification cryptographique
+
+2. **`https://w3id.org/openbadges/v3`**
+   - Ajoute le vocabulaire spécifique à OpenBadge v3.0
+   - Définit les termes comme `Achievement`, `Profile`, `AchievementSubject`, `Evidence`
+   - Inclut les extensions pour les badges numériques
+
+### Importance des contextes pour la validation de schéma
+
+Lorsqu'un validator analyse un document JSON-LD, il utilise les contextes pour:
+
+1. **Interpréter la sémantique**: Comprendre ce que signifient les termes et les relations
+2. **Valider la structure**: Vérifier que la structure suit le schéma défini
+3. **Faciliter l'interopérabilité**: Assurer que différents systèmes comprennent le document de la même façon
+
+### Exemple avec credentialSchema
+
+Voici un exemple montrant comment les contextes fonctionnent avec `credentialSchema`:
+
+```python
+from pyopenbadges.models import OpenBadgeCredential, CredentialSchema
+from datetime import datetime
+
+# Créer un credential avec un schéma
+credential = OpenBadgeCredential(
+    id="https://example.org/credentials/1",
+    type=["VerifiableCredential", "OpenBadgeCredential"],
+    issuer="https://example.org/issuers/1",
+    issuanceDate=datetime.now(),
+    credentialSubject={
+        "id": "did:example:recipient123",
+        "type": "AchievementSubject",
+        "achievement": "https://example.org/badges/1"
+    },
+    # Définir le schéma de validation
+    credentialSchema=CredentialSchema(
+        id="https://w3id.org/openbadges/v3/schema/3.0.0",
+        type="JsonSchemaValidator2019"
+    )
+)
+
+# Convertir en JSON-LD
+json_ld = credential.to_json_ld()
+print(json_ld)
+```
+
+Le résultat inclura à la fois le schéma et les contextes nécessaires:
+
+```json
+{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://w3id.org/openbadges/v3"
+  ],
+  "id": "https://example.org/credentials/1",
+  "type": ["VerifiableCredential", "OpenBadgeCredential"],
+  "issuer": "https://example.org/issuers/1",
+  "issuanceDate": "2023-05-01T14:30:00Z",
+  "credentialSubject": {
+    "id": "did:example:recipient123",
+    "type": "AchievementSubject",
+    "achievement": "https://example.org/badges/1"
+  },
+  "credentialSchema": {
+    "id": "https://w3id.org/openbadges/v3/schema/3.0.0",
+    "type": "JsonSchemaValidator2019"
+  }
+}
+```
+
 ## Valider un credential selon son schéma
 
 Une fois que vous avez créé un credential avec un schéma, vous pouvez valider explicitement sa conformité:

@@ -225,6 +225,53 @@ validation_result = validate_achievement(json_data)
 print(f"JSON validation: {validation_result.is_valid}")
 ```
 
+## Schema Validation
+
+PyOpenBadges supports schema validation via the `credentialSchema` field in the `OpenBadgeCredential` class. This allows you to ensure that your credentials conform to specific JSON schemas:
+
+```python
+from pyopenbadges.models import OpenBadgeCredential, CredentialSchema
+
+# Create a credential with schema validation
+credential = OpenBadgeCredential(
+    id="https://example.org/credentials/1",
+    type=["VerifiableCredential", "OpenBadgeCredential"],
+    issuer="https://example.org/issuers/1",
+    issuanceDate=datetime.now(),
+    credentialSubject=AchievementSubject(
+        id="did:example:recipient123",
+        type="AchievementSubject",
+        achievement="https://example.org/badges/1"
+    ),
+    # Add schema validation
+    credentialSchema=CredentialSchema(
+        id="https://w3id.org/openbadges/v3/schema/3.0.0",
+        type="JsonSchemaValidator2019"
+    )
+)
+
+# Validate against the schema
+try:
+    is_valid_schema = credential.validate_schema()
+    print(f"The credential conforms to the schema: {is_valid_schema}")
+except ValueError as e:
+    print(f"Schema validation error: {e}")
+
+# The is_valid() method also checks schema validation
+is_valid = credential.is_valid()
+print(f"The credential is valid: {is_valid}")
+```
+
+When converting to JSON-LD, the schema information is automatically included:
+
+```python
+# Convert to JSON-LD with schema information
+json_ld = credential.to_json_ld()
+print(json_ld["credentialSchema"])
+```
+
+For more details on schema validation, see the [schema validation tutorial](TUTORIAL.schema.md).
+
 ## Serialization and Deserialization
 
 PyOpenBadges allows you to easily convert objects to JSON-LD and vice versa:

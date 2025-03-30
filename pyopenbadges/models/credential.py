@@ -278,13 +278,28 @@ class OpenBadgeCredential(BaseModel):
     
     def to_json_ld(self) -> Dict[str, Any]:
         """
-        Convertit le credential en format JSON-LD compatible avec OpenBadge v3
+        Convertit le credential en format JSON-LD compatible avec OpenBadge v3.0
         
-        Cette méthode ajoute le contexte JSON-LD nécessaire pour la compatibilité
-        avec les outils de vérification OpenBadge.
+        Cette méthode ajoute les contextes JSON-LD nécessaires pour la compatibilité
+        avec les outils de vérification OpenBadge et les systèmes Verifiable Credentials.
+        
+        Les contextes inclus sont :
+        - https://www.w3.org/2018/credentials/v1 : Le vocabulaire principal de W3C Verifiable Credentials
+          qui définit les termes de base comme VerifiableCredential, credentialSubject, issuer, etc.
+        - https://w3id.org/openbadges/v3 : Le vocabulaire Open Badges v3.0 qui ajoute les termes
+          spécifiques aux badges numériques comme Achievement, Profile, AchievementSubject, etc.
+        
+        En ajoutant ces contextes, le JSON-LD résultant peut être:
+        1. Interprété correctement par les systèmes compatibles avec Open Badges v3.0
+        2. Validé contre les schémas officiels
+        3. Vérifié cryptographiquement (si signé)
+        4. Échangé entre différents systèmes de manière interopérable
+        
+        Note: Pour une conformité totale, assurez-vous que tous les champs obligatoires sont renseignés
+        selon la spécification (https://www.imsglobal.org/spec/ob/v3p0/).
         
         Returns:
-            Dict: Le credential au format JSON-LD
+            Dict: Le credential au format JSON-LD avec les contextes appropriés
         """
         data = self.model_dump(exclude_none=True)
         
@@ -328,9 +343,13 @@ class OpenBadgeCredential(BaseModel):
             data['credentialSchema']['id'] = str(self.credentialSchema.id)
             data['credentialSchema']['type'] = self.credentialSchema.type
             
+        # Ajout des contextes JSON-LD requis par la spécification Open Badges v3.0
+        # Le premier contexte définit le vocabulaire de base des Verifiable Credentials
+        # Le second ajoute le vocabulaire spécifique à Open Badges v3.0
         data["@context"] = [
             "https://www.w3.org/2018/credentials/v1",
             "https://w3id.org/openbadges/v3"
+            # Ajoutez ici d'autres contextes personnalisés si nécessaire
         ]
         
         return data
