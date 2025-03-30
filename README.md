@@ -33,6 +33,19 @@ In PyOpenBadges, digital badges are implemented as Verifiable Credentials:
 - The badge itself is represented as an Achievement
 - The credential can be cryptographically verified for authenticity
 
+## Future Development
+
+We are exploring several exciting directions for PyOpenBadges:
+
+- [JWT Support](TODO_JWT_Support.md): Plan for implementing JWT (JSON Web Token) as an alternative proof format according to the OpenBadge v3.0 specification, enhancing interoperability with existing identity systems.
+
+- [Fediverse Integration](TODO_Fediverse.md): FediBadge ! Vision for integrating Open Badges with ActivityPub and the Fediverse to create a decentralized, federated ecosystem for badge issuance and verification.
+
+- **Badge v2 to v3 Conversion**: Implementation of tools to automatically convert badges from the OpenBadge v2.0 specification to the newer v3.0 format, ensuring backward compatibility and smooth transition.
+
+- [**Steganography Integration**](TODO_Steganography.md): Development of features to embed badge data directly into pixel-based images, allowing badges to be stored within their visual representations.
+
+
 ## Installation
 
 ```bash
