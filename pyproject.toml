@@ -1,0 +1,54 @@
+[tool.poetry]
+name = "pyopenbadges"
+version = "0.1.0"
+description = "Une librairie Python moderne pour la création, la validation et la gestion des badges numériques conformes à la spécification OpenBadge v3.0"
+authors = ["Your Name <your.email@example.com>"]
+readme = "README.md"
+license = "MIT"
+repository = "https://github.com/yourusername/pyopenbadges"
+documentation = "https://github.com/yourusername/pyopenbadges"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Education",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[tool.poetry.dependencies]
+python = "^3.8.1"
+pydantic = "^2.0.0"
+requests = "^2.28.0"
+email-validator = "^2.0.0"  # Pour la validation des EmailStr dans Pydantic
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.0.0"
+pytest-cov = "^4.0.0"
+black = "^23.0.0"
+isort = "^5.12.0"
+mypy = "^1.0.0"
+flake8 = "^6.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ["py38"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_functions = "test_*"
