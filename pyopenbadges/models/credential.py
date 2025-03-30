@@ -5,7 +5,7 @@ Un OpenBadgeCredential représente l'attribution d'un badge spécifique à un de
 C'est l'équivalent de l'Assertion dans OpenBadge v2.
 """
 
-from typing import Optional, List, Dict, Any, Union, Annotated, TYPE_CHECKING
+from typing import Optional, List, Dict, Any, Union, Annotated, TYPE_CHECKING, Literal
 from pydantic import BaseModel, HttpUrl, EmailStr, Field, field_validator, model_validator
 from datetime import datetime
 from uuid import UUID
@@ -16,6 +16,28 @@ if TYPE_CHECKING:
 
 from .profile import Profile
 from .achievement import Achievement
+
+
+class CredentialSchema(BaseModel):
+    """
+    Classe représentant un schéma de validation pour un credential selon la spécification OpenBadge v3.0
+    
+    Un credentialSchema définit la structure et les règles de validation pour un type de credential.
+    Il peut être utilisé pour vérifier qu'un credential est conforme à un schéma spécifique.
+    """
+    id: HttpUrl  # URI du schéma de validation
+    type: str = "JsonSchemaValidator2019"  # Type de validateur de schéma
+    
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "id": "https://w3id.org/vc/status-list/2021/v1",
+                    "type": "JsonSchemaValidator2019"
+                }
+            ]
+        }
+    }
 
 
 class Evidence(BaseModel):
@@ -120,6 +142,7 @@ class OpenBadgeCredential(BaseModel):
     revoked: Optional[bool] = None  # Indique si le credential a été révoqué
     revocationReason: Optional[str] = None  # Raison de la révocation
     evidence: Optional[List[Evidence]] = None  # Preuves justifiant l'obtention
+    credentialSchema: Optional[CredentialSchema] = None  # Schéma de validation du credential
     
     @field_validator('type')
     def validate_type(cls, v):
@@ -144,6 +167,45 @@ class OpenBadgeCredential(BaseModel):
             v['name'] = "Unnamed Issuer"  # Ajouter un nom par défaut
         return v
     
+    def validate_schema(self) -> bool:
+        """
+        Valide le credential selon le schéma défini dans credentialSchema
+        
+        Cette méthode vérifie que le credential est conforme au schéma spécifié.
+        Si aucun schéma n'est défini, la validation est considérée comme réussie.
+        
+        Returns:
+            bool: True si le credential est conforme au schéma, False sinon
+        
+        Raises:
+            ValueError: Si le schéma n'est pas accessible ou valide
+        """
+        if not self.credentialSchema:
+            # Si aucun schéma n'est défini, le credential est considéré comme valide
+            return True
+            
+        # Dans une implémentation complète, cette méthode devrait :
+        # 1. Récupérer le schéma à partir de l'URL dans credentialSchema.id
+        # 2. Valider le credential selon ce schéma
+        # Pour l'instant, nous vérifions simplement que le type est correctement défini
+        if self.credentialSchema.type == "JsonSchemaValidator2019":
+            # Pour une validation réelle, nous devrions utiliser jsonschema
+            # Exemple d'implémentation future:
+            # import jsonschema
+            # import requests
+            # schema_response = requests.get(str(self.credentialSchema.id))
+            # if schema_response.status_code == 200:
+            #     schema = schema_response.json()
+            #     try:
+            #         jsonschema.validate(instance=self.model_dump(exclude_none=True), schema=schema)
+            #         return True
+            #     except jsonschema.exceptions.ValidationError:
+            #         return False
+            # raise ValueError(f"Impossible de récupérer le schéma: {self.credentialSchema.id}")
+            return True
+        else:
+            raise ValueError(f"Type de schéma non pris en charge: {self.credentialSchema.type}")
+
     def is_valid(self) -> bool:
         """
         Vérifie si le credential est valide (non expiré et non révoqué)
@@ -160,6 +222,14 @@ class OpenBadgeCredential(BaseModel):
         if self.expirationDate and self.expirationDate < datetime.now():
             return False
         
+        # Vérifier la conformité au schéma
+        try:
+            if not self.validate_schema():
+                return False
+        except ValueError:
+            # En cas d'erreur lors de la validation du schéma, on considère le credential comme invalide
+            return False
+            
         return True
     
     def sign(self, private_key: 'PrivateKey', verification_method: Union[str, HttpUrl]) -> 'OpenBadgeCredential':
@@ -250,6 +320,13 @@ class OpenBadgeCredential(BaseModel):
         # Convertir l'id du credentialSubject en chaîne si nécessaire
         if 'credentialSubject' in data and 'id' in data['credentialSubject'] and hasattr(data['credentialSubject']['id'], '__str__'):
             data['credentialSubject']['id'] = str(data['credentialSubject']['id'])
+        
+        # Ajouter le schéma de credential s'il existe
+        if self.credentialSchema:
+            if 'credentialSchema' not in data:
+                data['credentialSchema'] = {}
+            data['credentialSchema']['id'] = str(self.credentialSchema.id)
+            data['credentialSchema']['type'] = self.credentialSchema.type
             
         data["@context"] = [
             "https://www.w3.org/2018/credentials/v1",

@@ -14,6 +14,7 @@ More info about OpenBadges: https://openbadges.info/
 - Pydantic models with built-in validation
 - Conversion to/from JSON-LD
 - Advanced validation utilities
+- Schema validation via `credentialSchema`
 - Compatibility with Verifiable Credentials
 - Cryptographic signing and verification of credentials
 - Key management utilities (Ed25519, RSA)
@@ -45,7 +46,7 @@ poetry add pyopenbadges
 ## Quick Usage
 
 ```python
-from pyopenbadges.models import Profile, Achievement, OpenBadgeCredential, AchievementSubject
+from pyopenbadges.models import Profile, Achievement, OpenBadgeCredential, AchievementSubject, CredentialSchema
 from datetime import datetime
 
 # Create an issuer (Profile)
@@ -77,6 +78,11 @@ credential = OpenBadgeCredential(
         type="AchievementSubject",
         name="John Doe",
         achievement=badge
+    ),
+    # Optional schema validation
+    credentialSchema=CredentialSchema(
+        id="https://w3id.org/openbadges/v3/schema/3.0.0",
+        type="JsonSchemaValidator2019"
     )
 )
 

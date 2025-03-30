@@ -11,10 +11,11 @@ This tutorial will guide you through the steps to effectively use the PyOpenBadg
 3. [Creating a Badge (Achievement)](#creating-a-badge-achievement)
 4. [Issuing a Badge (OpenBadgeCredential)](#issuing-a-badge-openbadgecredential)
 5. [Validating Objects](#validating-objects)
-6. [Serialization and Deserialization](#serialization-and-deserialization)
-7. [Creating an Endorsement](#creating-an-endorsement)
-8. [Integration with Django](#integration-with-django)
-9. [Best Practices](#best-practices)
+6. [Schema Validation](#schema-validation)
+7. [Serialization and Deserialization](#serialization-and-deserialization)
+8. [Creating an Endorsement](#creating-an-endorsement)
+9. [Integration with Django](#integration-with-django)
+10. [Best Practices](#best-practices)
 
 ## Installation
 
