@@ -74,9 +74,4 @@ print(json_ld)
 Pour plus de détails sur l'utilisation de cette librairie, consultez le [tutoriel](TUTORIAL.fr.md) et la [documentation complète](DOCUMENTATION.md).
 
 ## Licence
-
-MIT
-
-## Contributeurs
-
-- Votre Nom - Développeur principal
+LGPL

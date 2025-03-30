@@ -33,7 +33,8 @@ poetry add pyopenbadges
 Dans OpenBadge v3, les émetteurs sont représentés par le modèle `Profile`. Commençons par créer un profil d'émetteur :
 
 ```python
-from pyopenbadges.models.profile import Profile, Image, Address
+from pyopenbadges.models import Profile
+from pyopenbadges.models.profile import Image, Address
 
 # Création d'un profil émetteur minimal
 issuer_minimal = Profile(
@@ -75,7 +76,8 @@ print(issuer_json)
 Une fois l'émetteur créé, vous pouvez définir des badges (Achievement) :
 
 ```python
-from pyopenbadges.models.achievement import Achievement, Criteria, Alignment
+from pyopenbadges.models import Achievement
+from pyopenbadges.models.achievement import Criteria, Alignment
 
 # Création d'un badge minimal
 badge_minimal = Achievement(
@@ -122,7 +124,7 @@ print(badge_json)
 Pour attribuer un badge à un destinataire, créez un `OpenBadgeCredential` :
 
 ```python
-from pyopenbadges.models.credential import OpenBadgeCredential, AchievementSubject, Evidence
+from pyopenbadges.models import OpenBadgeCredential, AchievementSubject, Evidence
 from datetime import datetime, timedelta
 
 # Date d'émission du badge
@@ -266,7 +268,8 @@ achievement_obj = json_ld_to_achievement(achievement_json_ld)
 Les endorsements permettent à des tiers de valider et de reconnaître des badges, des émetteurs ou des credentials :
 
 ```python
-from pyopenbadges.models.endorsement import EndorsementCredential, EndorsementSubject
+from pyopenbadges.models import EndorsementCredential
+from pyopenbadges.models.endorsement import EndorsementSubject
 
 # Création d'un profil pour l'organisme d'endorsement
 endorser = Profile(

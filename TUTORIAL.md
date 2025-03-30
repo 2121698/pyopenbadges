@@ -33,7 +33,8 @@ poetry add pyopenbadges
 In OpenBadge v3, issuers are represented by the `Profile` model. Let's start by creating an issuer profile:
 
 ```python
-from pyopenbadges.models.profile import Profile, Image, Address
+from pyopenbadges.models import Profile
+from pyopenbadges.models.profile import Image, Address
 
 # Creating a minimal issuer profile
 issuer_minimal = Profile(
@@ -75,7 +76,8 @@ print(issuer_json)
 Once the issuer is created, you can define badges (Achievement):
 
 ```python
-from pyopenbadges.models.achievement import Achievement, Criteria, Alignment
+from pyopenbadges.models import Achievement
+from pyopenbadges.models.achievement import Criteria, Alignment
 
 # Creating a minimal badge
 badge_minimal = Achievement(
@@ -122,7 +124,7 @@ print(badge_json)
 To award a badge to a recipient, create an `OpenBadgeCredential`:
 
 ```python
-from pyopenbadges.models.credential import OpenBadgeCredential, AchievementSubject, Evidence
+from pyopenbadges.models import OpenBadgeCredential, AchievementSubject, Evidence
 from datetime import datetime, timedelta
 
 # Badge issuance date
@@ -266,7 +268,8 @@ achievement_obj = json_ld_to_achievement(achievement_json_ld)
 Endorsements allow third parties to validate and recognize badges, issuers, or credentials:
 
 ```python
-from pyopenbadges.models.endorsement import EndorsementCredential, EndorsementSubject
+from pyopenbadges.models import EndorsementCredential
+from pyopenbadges.models.endorsement import EndorsementSubject
 
 # Creating a profile for the endorsing organization
 endorser = Profile(
