@@ -75,8 +75,5 @@ For more details on using this library, check out the [tutorial](TUTORIAL.md) an
 
 ## License
 
-MIT
+LGPL
 
-## Contributors
-
-- Your Name - Lead Developer

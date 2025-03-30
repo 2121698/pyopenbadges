@@ -1,63 +1,63 @@
-# Tutoriel PyOpenBadges
+# PyOpenBadges Tutorial
 
-[![🇫🇷 Version française](https://img.shields.io/badge/🇫🇷_Version_française-blue.svg)](TUTORIAL.fr.md)
+[![🇫🇷 French version](https://img.shields.io/badge/🇫🇷_French_version-blue.svg)](TUTORIAL.fr.md)
 
-Ce tutoriel vous guidera à travers les étapes pour utiliser efficacement la bibliothèque PyOpenBadges pour créer, valider et gérer des badges numériques conformes à la spécification OpenBadge v3.0.
+This tutorial will guide you through the steps to effectively use the PyOpenBadges library to create, validate, and manage digital badges compliant with the OpenBadge v3.0 specification.
 
-## Table des matières
+## Table of Contents
 
 1. [Installation](#installation)
-2. [Création d'un émetteur (Profile)](#création-dun-émetteur-profile)
-3. [Création d'un badge (Achievement)](#création-dun-badge-achievement)
-4. [Émission d'un badge (OpenBadgeCredential)](#émission-dun-badge-openbadgecredential)
-5. [Validation des objets](#validation-des-objets)
-6. [Sérialisation et désérialisation](#sérialisation-et-désérialisation)
-7. [Création d'un endorsement](#création-dun-endorsement)
-8. [Intégration avec Django](#intégration-avec-django)
-9. [Bonnes pratiques](#bonnes-pratiques)
+2. [Creating an Issuer (Profile)](#creating-an-issuer-profile)
+3. [Creating a Badge (Achievement)](#creating-a-badge-achievement)
+4. [Issuing a Badge (OpenBadgeCredential)](#issuing-a-badge-openbadgecredential)
+5. [Validating Objects](#validating-objects)
+6. [Serialization and Deserialization](#serialization-and-deserialization)
+7. [Creating an Endorsement](#creating-an-endorsement)
+8. [Integration with Django](#integration-with-django)
+9. [Best Practices](#best-practices)
 
 ## Installation
 
-Pour installer PyOpenBadges, utilisez pip ou poetry :
+To install PyOpenBadges, use pip or poetry:
 
 ```bash
-# Avec pip
+# With pip
 pip install pyopenbadges
 
-# Avec poetry (recommandé)
+# With poetry (recommended)
 poetry add pyopenbadges
 ```
 
-## Création d'un émetteur (Profile)
+## Creating an Issuer (Profile)
 
-Dans OpenBadge v3, les émetteurs sont représentés par le modèle `Profile`. Commençons par créer un profil d'émetteur :
+In OpenBadge v3, issuers are represented by the `Profile` model. Let's start by creating an issuer profile:
 
 ```python
 from pyopenbadges.models.profile import Profile, Image, Address
 
-# Création d'un profil émetteur minimal
+# Creating a minimal issuer profile
 issuer_minimal = Profile(
     id="https://example.org/issuers/1",
     type="Profile",
-    name="Mon Organisation"
+    name="My Organization"
 )
 
-# Création d'un profil émetteur complet
+# Creating a complete issuer profile
 issuer_complete = Profile(
     id="https://example.org/issuers/1",
     type="Profile",
-    name="Mon Organisation",
-    description="Organisation délivrant des badges de compétences en programmation",
+    name="My Organization",
+    description="Organization issuing programming skills badges",
     url="https://example.org",
     email="contact@example.org",
     telephone="+33123456789",
     image=Image(
         id="https://example.org/issuers/1/image",
         type="Image",
-        caption="Logo de Mon Organisation"
+        caption="My Organization Logo"
     ),
     address=Address(
-        streetAddress="123 Rue Exemple",
+        streetAddress="123 Example Street",
         addressLocality="Lyon",
         addressRegion="Auvergne-Rhône-Alpes",
         postalCode="69000",
@@ -65,72 +65,72 @@ issuer_complete = Profile(
     )
 )
 
-# Conversion en JSON-LD
+# Conversion to JSON-LD
 issuer_json = issuer_complete.to_json_ld()
 print(issuer_json)
 ```
 
-## Création d'un badge (Achievement)
+## Creating a Badge (Achievement)
 
-Une fois l'émetteur créé, vous pouvez définir des badges (Achievement) :
+Once the issuer is created, you can define badges (Achievement):
 
 ```python
 from pyopenbadges.models.achievement import Achievement, Criteria, Alignment
 
-# Création d'un badge minimal
+# Creating a minimal badge
 badge_minimal = Achievement(
     id="https://example.org/badges/1",
     type="Achievement",
-    name="Badge Python Débutant",
-    issuer="https://example.org/issuers/1"  # Référence à l'émetteur par son ID
+    name="Python Beginner Badge",
+    issuer="https://example.org/issuers/1"  # Reference to the issuer by its ID
 )
 
-# Création d'un badge complet
+# Creating a complete badge
 badge_complete = Achievement(
     id="https://example.org/badges/1",
     type="Achievement",
-    name="Badge Python Débutant",
-    description="Ce badge certifie la maîtrise des bases de Python",
-    issuer=issuer_complete,  # Utilisation de l'objet issuer directement
+    name="Python Beginner Badge",
+    description="This badge certifies mastery of Python basics",
+    issuer=issuer_complete,  # Using the issuer object directly
     criteria=Criteria(
-        narrative="Pour obtenir ce badge, le candidat doit démontrer sa compréhension des concepts fondamentaux de Python, incluant les variables, les structures de contrôle, les fonctions et les modules de base."
+        narrative="To earn this badge, the candidate must demonstrate understanding of fundamental Python concepts, including variables, control structures, functions, and basic modules."
     ),
     image=Image(
         id="https://example.org/badges/1/image",
         type="Image",
-        caption="Badge Python Débutant"
+        caption="Python Beginner Badge"
     ),
-    tags=["python", "programmation", "débutant"],
+    tags=["python", "programming", "beginner"],
     alignment=[
         Alignment(
-            targetName="Programmer en Python",
+            targetName="Programming in Python",
             targetUrl="https://example.org/frameworks/python-skills/beginner",
-            targetDescription="Capacité à écrire des programmes Python simples",
-            targetFramework="Cadre de compétences numériques",
+            targetDescription="Ability to write simple Python programs",
+            targetFramework="Digital Skills Framework",
             targetCode="PYTHON-BEG-01"
         )
     ]
 )
 
-# Conversion en JSON-LD
+# Conversion to JSON-LD
 badge_json = badge_complete.to_json_ld()
 print(badge_json)
 ```
 
-## Émission d'un badge (OpenBadgeCredential)
+## Issuing a Badge (OpenBadgeCredential)
 
-Pour attribuer un badge à un destinataire, créez un `OpenBadgeCredential` :
+To award a badge to a recipient, create an `OpenBadgeCredential`:
 
 ```python
 from pyopenbadges.models.credential import OpenBadgeCredential, AchievementSubject, Evidence
 from datetime import datetime, timedelta
 
-# Date d'émission du badge
+# Badge issuance date
 issuance_date = datetime.now()
-# Date d'expiration (optionnelle)
+# Expiration date (optional)
 expiration_date = issuance_date + timedelta(days=365)
 
-# Création d'un credential minimal
+# Creating a minimal credential
 credential_minimal = OpenBadgeCredential(
     id="https://example.org/credentials/1",
     type=["VerifiableCredential", "OpenBadgeCredential"],
@@ -143,44 +143,44 @@ credential_minimal = OpenBadgeCredential(
     )
 )
 
-# Création d'un credential complet
+# Creating a complete credential
 credential_complete = OpenBadgeCredential(
     id="https://example.org/credentials/1",
     type=["VerifiableCredential", "OpenBadgeCredential"],
-    name="Certification Python Débutant pour Jean Dupont",
-    description="Certification attestant des compétences en Python de niveau débutant",
+    name="Python Beginner Certification for John Doe",
+    description="Certification attesting to beginner-level Python skills",
     issuer=issuer_complete,
     issuanceDate=issuance_date,
     expirationDate=expiration_date,
     credentialSubject=AchievementSubject(
         id="did:example:recipient123",
         type="AchievementSubject",
-        name="Jean Dupont",
+        name="John Doe",
         achievement=badge_complete
     ),
     evidence=[
         Evidence(
             id="https://example.org/evidence/1",
             type="Evidence",
-            name="Projet Python",
-            description="Application console développée en Python",
-            narrative="Jean a développé une application CLI qui démontre sa compréhension des boucles, conditionnels et fonctions en Python."
+            name="Python Project",
+            description="Console application developed in Python",
+            narrative="John developed a CLI application that demonstrates his understanding of loops, conditionals, and functions in Python."
         )
     ]
 )
 
-# Vérification de la validité du credential
+# Verifying the validity of the credential
 is_valid = credential_complete.is_valid()
-print(f"Le credential est valide : {is_valid}")
+print(f"The credential is valid: {is_valid}")
 
-# Conversion en JSON-LD
+# Conversion to JSON-LD
 credential_json = credential_complete.to_json_ld()
 print(credential_json)
 ```
 
-## Validation des objets
+## Validating Objects
 
-PyOpenBadges fournit des utilitaires pour valider les objets selon la spécification OpenBadge v3 :
+PyOpenBadges provides utilities to validate objects according to the OpenBadge v3 specification:
 
 ```python
 from pyopenbadges.utils.validators import (
@@ -190,41 +190,41 @@ from pyopenbadges.utils.validators import (
     validate_endorsement
 )
 
-# Valider un Profile
+# Validating a Profile
 profile_validation = validate_profile(issuer_complete)
 if profile_validation.is_valid:
-    print("Le profil est valide selon la spécification OpenBadge v3")
+    print("The profile is valid according to the OpenBadge v3 specification")
 else:
-    print("Erreurs de validation du profil :", profile_validation.errors)
+    print("Profile validation errors:", profile_validation.errors)
 
-# Valider un Achievement
+# Validating an Achievement
 achievement_validation = validate_achievement(badge_complete)
 if achievement_validation.is_valid:
-    print("Le badge est valide selon la spécification OpenBadge v3")
+    print("The badge is valid according to the OpenBadge v3 specification")
 else:
-    print("Erreurs de validation du badge :", achievement_validation.errors)
+    print("Badge validation errors:", achievement_validation.errors)
 
-# Valider un OpenBadgeCredential
+# Validating an OpenBadgeCredential
 credential_validation = validate_credential(credential_complete)
 if credential_validation.is_valid:
-    print("Le credential est valide selon la spécification OpenBadge v3")
+    print("The credential is valid according to the OpenBadge v3 specification")
 else:
-    print("Erreurs de validation du credential :", credential_validation.errors)
+    print("Credential validation errors:", credential_validation.errors)
 
-# Vous pouvez également valider des objets à partir de dictionnaires JSON-LD
+# You can also validate objects from JSON-LD dictionaries
 json_data = {
     "id": "https://example.org/badges/2",
     "type": "Achievement",
-    "name": "Badge Python Intermédiaire",
+    "name": "Python Intermediate Badge",
     "issuer": "https://example.org/issuers/1"
 }
 validation_result = validate_achievement(json_data)
-print(f"Validation du JSON : {validation_result.is_valid}")
+print(f"JSON validation: {validation_result.is_valid}")
 ```
 
-## Sérialisation et désérialisation
+## Serialization and Deserialization
 
-PyOpenBadges permet de convertir facilement les objets en JSON-LD et vice versa :
+PyOpenBadges allows you to easily convert objects to JSON-LD and vice versa:
 
 ```python
 from pyopenbadges.utils.serializers import (
@@ -236,18 +236,18 @@ from pyopenbadges.utils.serializers import (
     json_ld_to_endorsement
 )
 
-# Sauvegarder un objet dans un fichier
+# Save an object to a file
 save_object_to_file(credential_complete, "credential.json")
 
-# Charger un objet depuis un fichier
+# Load an object from a file
 loaded_credential = load_object_from_file("credential.json", "OpenBadgeCredential")
 
-# Conversion JSON-LD vers objets Python
+# Converting JSON-LD to Python objects
 profile_json_ld = {
     "@context": "https://w3id.org/openbadges/v3",
     "id": "https://example.org/issuers/2",
     "type": "Profile",
-    "name": "Autre Organisation"
+    "name": "Another Organization"
 }
 profile_obj = json_ld_to_profile(profile_json_ld)
 
@@ -255,93 +255,93 @@ achievement_json_ld = {
     "@context": "https://w3id.org/openbadges/v3",
     "id": "https://example.org/badges/2",
     "type": "Achievement",
-    "name": "Badge Python Intermédiaire",
+    "name": "Python Intermediate Badge",
     "issuer": "https://example.org/issuers/1"
 }
 achievement_obj = json_ld_to_achievement(achievement_json_ld)
 ```
 
-## Création d'un endorsement
+## Creating an Endorsement
 
-Les endorsements permettent à des tiers de valider et de reconnaître des badges, des émetteurs ou des credentials :
+Endorsements allow third parties to validate and recognize badges, issuers, or credentials:
 
 ```python
 from pyopenbadges.models.endorsement import EndorsementCredential, EndorsementSubject
 
-# Création d'un profil pour l'organisme d'endorsement
+# Creating a profile for the endorsing organization
 endorser = Profile(
     id="https://endorser.org/profiles/1",
     type="Profile",
-    name="Organisme d'Accréditation",
-    description="Organisme qui accrédite les badges de qualité"
+    name="Accreditation Organization",
+    description="Organization that accredits quality badges"
 )
 
-# Création d'un endorsement pour un badge
+# Creating an endorsement for a badge
 badge_endorsement = EndorsementCredential(
     id="https://endorser.org/endorsements/1",
     type=["VerifiableCredential", "EndorsementCredential"],
-    name="Endorsement du Badge Python Débutant",
-    description="Ce badge est reconnu par notre organisme comme étant de haute qualité",
+    name="Python Beginner Badge Endorsement",
+    description="This badge is recognized by our organization as being of high quality",
     issuer=endorser,
     issuanceDate=datetime.now(),
     credentialSubject=EndorsementSubject(
         id="https://example.org/badges/1",
         type="Achievement",
-        endorsementComment="Ce badge suit toutes les bonnes pratiques pédagogiques et correspond bien au niveau débutant en Python."
+        endorsementComment="This badge follows all good pedagogical practices and corresponds well to the beginner level in Python."
     )
 )
 
-# Création d'un endorsement pour un émetteur
+# Creating an endorsement for an issuer
 issuer_endorsement = EndorsementCredential(
     id="https://endorser.org/endorsements/2",
     type=["VerifiableCredential", "EndorsementCredential"],
-    name="Endorsement de Mon Organisation",
+    name="My Organization Endorsement",
     issuer=endorser,
     issuanceDate=datetime.now(),
     credentialSubject=EndorsementSubject(
         id="https://example.org/issuers/1",
         type="Profile",
-        endorsementComment="Cet émetteur est reconnu pour la qualité de ses programmes de certification."
+        endorsementComment="This issuer is recognized for the quality of its certification programs."
     )
 )
 
-# Conversion en JSON-LD
+# Conversion to JSON-LD
 endorsement_json = badge_endorsement.to_json_ld()
 print(endorsement_json)
 ```
 
-## Bonnes pratiques
+## Best Practices
 
-Voici quelques recommandations pour utiliser efficacement PyOpenBadges :
+Here are some recommendations for effectively using PyOpenBadges:
 
-1. **Utilisez des identifiants persistants** : Assurez-vous que les identifiants (URLs) de vos badges, émetteurs et credentials sont persistants et accessibles.
+1. **Use persistent identifiers**: Ensure that the identifiers (URLs) of your badges, issuers, and credentials are persistent and accessible.
 
-2. **Validez vos données** : Utilisez toujours les fonctions de validation pour vous assurer que vos objets sont conformes à la spécification.
+2. **Validate your data**: Always use the validation functions to ensure that your objects comply with the specification.
 
-3. **Gestion des dates** : Utilisez des objets `datetime` Python pour les dates et évitez les manipulations manuelles de chaînes.
+3. **Date management**: Use Python `datetime` objects for dates and avoid manual string manipulations.
 
-4. **Accès public** : Les informations sur les badges doivent être accessibles publiquement. Assurez-vous que les URLs utilisées comme identifiants sont accessibles.
+4. **Public access**: Information about badges should be publicly accessible. Make sure that URLs used as identifiers are accessible.
 
-5. **Tests** : Testez vos implémentations avec des cas de test couvrant les scénarios courants et les cas limites.
+5. **Testing**: Test your implementations with test cases covering common scenarios and edge cases.
 
 ```python
-# Exemple de test
+# Test example
 import pytest
 from pyopenbadges.models import Achievement
 from pyopenbadges.utils.validators import validate_achievement
 
 def test_achievement_validation():
-    # Test avec un badge valide
+    # Test with a valid badge
     valid_badge = Achievement(
         id="https://example.org/badges/1",
         type="Achievement",
-        name="Badge Test",
+        name="Test Badge",
         issuer="https://example.org/issuers/1"
     )
     result = validate_achievement(valid_badge)
     assert result.is_valid
     
-    # Test avec un badge invalide (sans nom)
+    # Test with an invalid badge (without name)
     invalid_badge = {
         "id": "https://example.org/badges/1",
         "type": "Achievement",
@@ -351,4 +351,4 @@ def test_achievement_validation():
     assert not result.is_valid
 ```
 
-En suivant ce tutoriel, vous devriez maintenant être en mesure d'utiliser efficacement la bibliothèque PyOpenBadges pour créer, valider et gérer des badges numériques conformes à la spécification OpenBadge v3.0 de l'IMS Global.
+By following this tutorial, you should now be able to effectively use the PyOpenBadges library to create, validate, and manage digital badges compliant with the IMS Global OpenBadge v3.0 specification.
